@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Implementasi Algoritma Search & Sort</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        body { padding: 20px; max-width: 1000px; margin: auto; }
+        h1, h2 { color: #2c3e50; margin: 15px 0; }
+        .section { border: 1px solid #ddd; padding: 20px; margin: 10px 0; border-radius: 5px; }
+        input, button { padding: 8px; margin: 5px; border-radius: 3px; border: 1px solid #ddd; }
+        button { background: #3498db; color: white; cursor: pointer; }
+        button:hover { background: #2980b9; }
+        .result { margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 3px; }
+        pre { background: #2c3e50; color: white; padding: 10px; border-radius: 3px; overflow-x: auto; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Implementasi Algoritma Search & Sort</h1>
+
+    <!-- SECTION PENCARIAN -->
+    <div class="section">
+        <h2>Algoritma Pencarian</h2>
+        <h3>Linear Search</h3>
+        <input type="text" id="linearData" placeholder="Data (pisahkan dengan koma, contoh: 5,2,9,1)">
+        <input type="number" id="linearTarget" placeholder="Target yang dicari">
+        <button onclick="runLinearSearch()">Cari dengan Linear Search</button>
+        <div class="result" id="linearResult"></div>
+
+        <h3>Binary Search (Data Harus Terurut)</h3>
+        <input type="text" id="binaryData" placeholder="Data terurut (pisahkan dengan koma, contoh: 1,2,5,9)">
+        <input type="number" id="binaryTarget" placeholder="Target yang dicari">
+        <button onclick="runBinarySearch()">Cari dengan Binary Search</button>
+        <div class="result" id="binaryResult"></div>
+
+        <pre>// Kode JavaScript Pencarian
+function linearSearch(arr, target) {
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i] === target) return `Ditemukan pada indeks ${i}`;
+    }
+    return "Tidak ditemukan";
+}
+
+function binarySearch(arr, target) {
+    let awal = 0, akhir = arr.length - 1;
+    while (awal <= akhir) {
+        let tengah = Math.floor((awal + akhir) / 2);
+        if (arr[tengah] === target) return `Ditemukan pada indeks ${tengah}`;
+        if (arr[tengah] < target) awal = tengah + 1;
+        else akhir = tengah - 1;
+    }
+    return "Tidak ditemukan";
+}</pre>
+    </div>
+
+    <!-- SECTION PENGURUTAN -->
+    <div class="section">
+        <h2>Algoritma Pengurutan</h2>
+        <input type="text" id="sortData" placeholder="Data (pisahkan dengan koma, contoh: 8,3,5,1,9)">
+        <button onclick="runBubbleSort()">Urut dengan Bubble Sort</button>
+        <button onclick="runMergeSort()">Urut dengan Merge Sort</button>
+        <button onclick="runQuickSort()">Urut dengan Quick Sort</button>
+        <div class="result" id="sortResult"></div>
+
+        <pre>// Kode JavaScript Pengurutan
+function bubbleSort(arr) {
+    let n = arr.length;
+    for (let i = 0; i < n-1; i++) {
+        for (let j = 0; j < n-i-1; j++) {
+            if (arr[j] > arr[j+1]) [arr[j], arr[j+1]] = [arr[j+1], arr[j]];
+        }
+    }
+    return arr;
+}
+
+function mergeSort(arr) {
+    if (arr.length <= 1) return arr;
+    let mid = Math.floor(arr.length / 2);
+    let kiri = mergeSort(arr.slice(0, mid));
+    let kanan = mergeSort(arr.slice(mid));
+    return merge(kiri, kanan);
+}
+function merge(kiri, kanan) {
+    let hasil = [], i = 0, j = 0;
+    while (i < kiri.length && j < kanan.length) {
+        hasil.push(kiri[i] < kanan[j] ? kiri[i++] : kanan[j++]);
+    }
+    return hasil.concat(i < kiri.length ? kiri.slice(i) : kanan.slice(j));
+}
+
+function quickSort(arr) {
+    if (arr.length <= 1) return arr;
+    let pivot = arr[arr.length - 1];
+    let kiri = [], kanan = [];
+    for (let i = 0; i < arr.length - 1; i++) {
+        arr[i] < pivot ? kiri.push(arr[i]) : kanan.push(arr[i]);
+    }
+    return [...quickSort(kiri), pivot, ...quickSort(kanan)];
+}</pre>
+    </div>
+
+    <script>
+        // Fungsi untuk menjalankan pencarian
+        function runLinearSearch() {
+            let arr = document.getElementById('linearData').value.split(',').map(Number);
+            let target = Number(document.getElementById('linearTarget').value);
+            document.getElementById('linearResult').textContent = `Linear Search: ${linearSearch(arr, target)}`;
+        }
+
+        function runBinarySearch() {
+            let arr = document.getElementById('binaryData').value.split(',').map(Number);
+            let target = Number(document.getElementById('binaryTarget').value);
+            document.getElementById('binaryResult').textContent = `Binary Search: ${binarySearch(arr, target)}`;
+        }
+
+        // Fungsi untuk menjalankan pengurutan
+        function runBubbleSort() {
+            let arr = document.getElementById('sortData').value.split(',').map(Number);
+            document.getElementById('sortResult').textContent = `Bubble Sort Hasil: ${bubbleSort([...arr])}`;
+        }
+
+        function runMergeSort() {
+            let arr = document.getElementById('sortData').value.split(',').map(Number);
+            document.getElementById('sortResult').textContent = `Merge Sort Hasil: ${mergeSort([...arr])}`;
+        }
+
+        function runQuickSort() {
+            let arr = document.getElementById('sortData').value.split(',').map(Number);
+            document.getElementById('sortResult').textContent = `Quick Sort Hasil: ${quickSort([...arr])}`;
+        }
+    </script>
+</body>
+</html>
